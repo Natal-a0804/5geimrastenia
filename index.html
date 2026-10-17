@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!-- ДВА НАЗВАНИЯ: игровое + SEO-заголовок с темой, возрастом и «подготовка к школе» -->
+<title>Ягоды и грибы — игра для детей 5 лет | Подготовка к школе с Яшей</title>
+<meta name="description" content="Бесплатная игра для детей 5 лет: куст и его ягоды — какая ягода на каком кусте растёт, найди все грибы и все ягоды. Подготовка к школе с папильоном Яшей.">
+<style>
+
+  :root{ --green:#2E7D32; --ink:#1a1a1a; --paper:#FAF6EC; --line:#e0dccf; --card:#fff;
+         --red:#D32F2F; --blue:#0D3C8F; }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);
+            font-family:"Segoe UI",Arial,sans-serif}
+  img{object-fit:contain;display:block}
+  h1{font-size:clamp(30px,7vw,50px);color:var(--green);text-align:center;line-height:1.15;margin:6px 0}
+  h2{font-size:clamp(32px,7.5vw,52px);color:var(--green);text-align:center;line-height:1.15;margin:6px 0}
+  p{font-size:clamp(26px,6vw,38px);line-height:1.3;margin:6px 0;text-align:center}
+  .sub{font-size:clamp(24px,5.4vw,34px);color:var(--ink);text-align:center;margin:4px 0 8px}
+  .sub.green{color:var(--green);font-weight:700}
+  .top{width:100%;display:flex;justify-content:space-between;align-items:center;
+       font-size:clamp(17px,3.8vw,24px);color:var(--green);font-weight:400}
+  .counter{font-size:clamp(17px,3.8vw,24px);color:var(--green);font-weight:400}
+  .wrap{position:relative;min-height:100%;display:flex;flex-direction:column;max-width:760px;margin:0 auto}
+  .screen{display:none;flex-direction:column;align-items:center;gap:8px;min-height:100vh;padding:10px 12px 130px}
+  .screen.on{display:flex}
+  .row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+  .btn{font-size:clamp(17px,3.8vw,24px);min-height:56px;padding:10px 18px;border-radius:14px;
+       border:2px solid var(--green);background:#fff;color:var(--green);font-weight:700;
+       cursor:pointer;touch-action:manipulation;font-family:inherit}
+  .btn.main{background:var(--green);color:#fff}
+  .vowel{color:var(--red) !important}
+  .cons{color:var(--blue) !important}
+  .feedback{font-size:clamp(28px,5.8vw,40px);font-weight:700;color:var(--green);text-align:center;min-height:1.2em}
+  .feedback img{max-height:22vh;border-radius:12px;display:block;margin:0 auto}
+  /* конец задания: герой с сердечками КРУПНО, на весь экран */
+  .bigHero{display:none;flex-direction:column;align-items:center;gap:4px;animation:pop .5s}
+  .bigHero.on{display:flex;flex:1;justify-content:center}
+  .bigHero img{max-height:52vh;border-radius:20px}
+  .bigHero .bt{font-size:clamp(30px,7vw,46px);color:var(--green);font-weight:800;text-align:center}
+  .video{width:100%;max-width:640px;margin:0 auto;max-height:72vh;border-radius:14px;background:#000}
+  .logo{max-width:min(58vw,320px);max-height:26vh;border-radius:22px;border:4px solid #fff;
+        box-shadow:0 6px 26px rgba(0,0,0,.18)}
+  .foot{position:fixed;left:0;right:0;bottom:0;max-width:760px;margin:0 auto;
+        padding:10px 12px calc(16px + env(safe-area-inset-bottom));
+        background:linear-gradient(180deg,rgba(250,246,236,0) 0%,var(--paper) 45%);display:flex;gap:12px;
+        justify-content:center;z-index:2147483000}
+  .shake{animation:sh .45s}
+  @keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .hint{font-size:clamp(22px,5vw,32px);color:var(--green);font-weight:700;text-align:center;min-height:1.2em}
+
+  /* ── задание 1 «куст – ягода»: сверху куст КРУПНО, внизу 4 ягодки-кнопки ── */
+  .taskpic img{max-height:36vh;max-width:86%;border-radius:14px}
+  #kustQ{color:var(--green);font-weight:700}
+  #s2 .feedback{color:var(--green)}
+  .optrow{display:flex;gap:10px;justify-content:center;width:100%;max-width:640px}
+  .optbtn{flex:1 1 0;min-width:0;background:transparent;border:2px solid transparent;border-radius:16px;
+          padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;
+          cursor:pointer;touch-action:manipulation}
+  .optbtn img{max-height:12vh;max-width:96%;border-radius:10px}
+  .optbtn .word{font-size:clamp(14px,3.2vw,18px);font-weight:700;text-align:center;line-height:1.15;color:var(--ink)}
+  .optbtn.done{border-color:var(--green);background:#EAF3E6;box-shadow:0 0 0 2px var(--green) inset}
+  /* подпись куста: отдельно, мельче, внизу под картинкой — зелёная */
+  .kname{font-size:clamp(16px,3.8vw,22px);color:var(--green);font-weight:700;text-align:center;margin:2px 0 0}
+  /* после верного ответа: ягода куста + радостный герой — под кустом */
+  .kustAns{display:flex;justify-content:center;align-items:center;gap:14px}
+  .kustAns img{max-height:13vh;border-radius:12px;display:block}
+
+  /* ── задание 2 «грибы – ягоды»: поле 3×3 ── */
+  #gridBox{display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:4px;width:100%;
+           max-width:344px;max-width:min(88vw,640px);margin:6px auto}
+  @media (pointer:coarse){ #gridBox{max-width:344px;max-width:min(calc(100vh - 300px),88vw)} }
+  @media (min-width:601px){ #gridBox{max-width:640px;max-width:min(640px,calc(100vh - 280px))} }
+  .cell{background:#fff;border:2px solid #cfc8b6;border-radius:10px;aspect-ratio:1/1;display:flex;
+        align-items:center;justify-content:center;padding:3%;cursor:pointer;transition:.15s}
+  .cell img{width:100%;height:100%;object-fit:contain}
+  .cell.done{border-color:var(--green);background:#EAF3E6;box-shadow:0 0 0 2px var(--green) inset}
+  .think{max-height:14vh;border-radius:12px;display:block;margin:3px auto}
+  #s3{justify-content:center}
+
+  /* ── награда: весёлый герой после верного ответа и в конце задания ── */
+  .heroReward{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--green);
+              border-radius:16px;padding:6px 12px;max-width:560px;animation:pop .4s}
+  .heroReward img{max-height:28vh;border-radius:14px}
+  .heroReward .hrtext{font-size:clamp(20px,4.8vw,28px);font-weight:800;color:var(--green)}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+
+  .stars{font-size:52px;text-align:center;margin:0}
+  .momcard{background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px;max-width:620px}
+  .momcard p{font-size:clamp(18px,4vw,26px) !important;margin:0 0 4px;color:var(--green)}
+  .momcard p:last-child{margin:0;color:var(--green)}
+  #s0{justify-content:center}
+  #s0 .logo{max-height:24vh;max-width:min(72vw,430px)}
+  @media (max-height:800px){ #s0 .logo{max-height:16vh} }
+  #s1{justify-content:center}
+  #s1 .video{max-height:62vh}
+  #s4{justify-content:center}
+  #s4 .video{max-height:56vh}
+
+  /* ── ПК/панель: потолки размеров в пикселях, чтобы ничего не раздувалось ── */
+  @media (min-width:601px){
+    .taskpic img{max-height:340px}
+    .optbtn img{max-height:120px}
+    .heroReward img{max-height:190px}
+    .video{max-height:380px}
+    .logo{max-height:180px;max-width:300px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ═══════════════ ЭКРАН 1. ТИТУЛ ═══════════════
+       Логотип → название → подзаголовок → кнопка «▶ Начать». -->
+  <section class="screen" id="s0">
+    <video class="logo" id="vidlogo" src="video/logo.mp4" poster="images/poster_logo.jpg"
+           autoplay muted loop playsinline preload="metadata"></video>
+    <h1>ЯГОДЫ И ГРИБЫ</h1>
+    <p class="sub green">Приключение с Яшей и Баловашкой: лесные находки!</p>
+    <button class="btn main" data-act="go('s1')">▶ Начать</button>
+  </section>
+
+  <!-- ═══════════════ ЭКРАН 2. ВИДЕО-НАЧАЛО ═══════════════
+       Ролик-приветствие играет при входе; «Дальше» всегда внизу. -->
+  <section class="screen" id="s1">
+    <video class="video" id="vidpriv" src="video/privet.mp4" poster="images/poster_privet.jpg"
+           playsinline preload="metadata" data-act="vidPlay(el)"></video>
+    <p class="sub green">Мы с Баловашкой в лес пошли — грибы и ягоды нашли!</p>
+  </section>
+
+  <!-- ═══════════════ ЗАДАНИЕ 1. КУСТ – ЯГОДА ═══════════════
+       Сверху куст — внизу четыре ягоды. Вопрос: «Какая ягода растёт на этом кусте?» -->
+  <section class="screen" id="s2">
+    <div class="top"><span>Задание 1 из 2</span><span class="counter" id="cntKust"></span></div>
+    <p class="sub green">Куст и его ягода</p>
+    <div class="taskpic" id="kustPic"></div>
+    <div class="kname" id="kustName"></div>
+    <div class="kustAns" id="kustAns"></div>
+    <p id="kustQ"></p>
+    <div class="optrow" id="kustOpts"></div>
+    <div class="feedback" id="fb1"></div>
+    <div class="bigHero" id="bigHero1"></div>
+    <div class="hint" id="hint1"></div>
+  </section>
+
+  <!-- ═══════════════ ЗАДАНИЕ 2. ГРИБЫ – ЯГОДЫ ═══════════════
+       Поле 3×3: сначала нажимаем все грибы, потом все ягоды. -->
+  <section class="screen" id="s3">
+    <div class="top"><span>Задание 2 из 2</span><span class="counter" id="cntFind"></span></div>
+    <p class="sub green" id="gridSub">Нажми на все грибы!</p>
+    <div id="gridBox"></div>
+    <div class="bigHero" id="bigHero2"></div>
+    <div class="feedback" id="fb3"></div>
+  </section>
+
+  <!-- ═══════════════ ФИНАЛ ═══════════════
+       ⭐ → видео-итог со звёздочкой → «Маме 💛» → «Пройти заново». -->
+  <section class="screen" id="s4">
+    <div class="stars">⭐</div>
+    <video class="video" id="viditog" src="video/itog.mp4" poster="images/poster_itog.jpg"
+           playsinline preload="none" data-act="vidPlay(el)"></video>
+    <div class="momcard">
+      <p>Маме 💛</p>
+      <p>На прогулке найдите кустик и спросите малыша: есть ли на нём ягоды? А дома на картинках поищите знакомые грибы. Похвалите за старание.</p>
+    </div>
+    <button class="btn main" data-act="restart()">Пройти заново</button>
+  </section>
+
+</div>
+<div class="foot" id="foot"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════
+   ЗАНЯТИЕ «ЯГОДЫ И ГРИБЫ» — 5 ЛЕТ
+   Порядок: s0 титул → s1 видео-начало → s2 куст-ягода → s3 грибы-ягоды → s4 финал
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ═══ ОЗВУЧКА (записано Наташей 17.10): ku_q вопрос кустов, gi_q/ya_q этапы поля,
+   gr_grib/gr_yag мягкие подсказки, gr_done итог задания 2. Похвалы — из банка. ═══ */
+var SCREEN_SAY = {};
+
+/* переходы между экранами */
+var NEXT = { s0:'s1', s1:'s2', s2:'s3', s3:'s4' };
+var VIDEO_SHOW = { s1:'vidpriv', s4:'viditog' };   /* видео играет при входе на свой экран */
+
+/* ═══ ЗАДАНИЕ 1 — куст → его ягода: сверху куст, внизу 4 ягоды ═══ */
+var KUSTY = [
+  { i:'kust_shipovnik.jpg',  n:'Шиповник',  q:'Какая ягодка растёт на этом кусте?', a:'yag_shipovnik.jpg'  },
+  { i:'kust_malina.jpg',     n:'Малина',    q:'Какая ягодка растёт на этом кусте?', a:'yag_malina.jpg'     },
+  { i:'kust_smorodina.jpg',  n:'Смородина', q:'Какая ягодка растёт на этом кусте?', a:'yag_smorodina.jpg'  },
+  { i:'kust_kryzhovnik.jpg', n:'Крыжовник', q:'Какая ягодка растёт на этом кусте?', a:'yag_kryzhovnik.jpg' }
+];
+var KUST_OPTS = [
+  { i:'yag_malina.jpg',     t:'Малина'    },
+  { i:'yag_smorodina.jpg',  t:'Смородина' },
+  { i:'yag_kryzhovnik.jpg', t:'Крыжовник' },
+  { i:'yag_shipovnik.jpg',  t:'Шиповник'  }
+];
+
+/* ═══ ЗАДАНИЕ 2 — поле 3×3: сначала все грибы, потом все ягоды ═══ */
+var G_PHASES = [
+  { name:'грибы', err:'гриб',   errSay:'gr_yag',  sub:'Нажми на все грибы!', all:'Все грибы найдены!', say:'gi_q',
+    targets:['grib_lisichka.jpg','grib_maslenok.jpg','grib_podosinovik.jpg','grib_shampinion.jpg','grib1.jpg'],
+    need:5,
+    pool:['yag_klubnika.jpg','yag_malina.jpg','yag_smorodina.jpg','yag_kryzhovnik.jpg'] },
+  { name:'ягоды', err:'ягода',  errSay:'gr_grib', sub:'А теперь нажми на все ягоды!', all:'Все ягоды собраны!', say:'ya_q',
+    targets:['yag_klubnika.jpg','yag_malina.jpg','yag_smorodina.jpg','yag_kryzhovnik.jpg'],
+    need:4,
+    pool:['grib_lisichka.jpg','grib_maslenok.jpg','grib_podosinovik.jpg','grib_shampinion.jpg','grib1.jpg'] }
+];
+var G_N = 3;
+
+/* ═══════════════════════════════ КОД ДАЛЬШЕ НЕ ТРОГАЕМ ═══════════════════════════════ */
+
+var PRAISE = ['genialno','tochno2','p_molodec','p_da','p_konechno','p_soglasna','p_aga','p_verno','p_ty_prav','p_konechno2'];
+var VOICE = ['ku_q','gi_q','ya_q','gr_grib','gr_yag','gr_done'];   /* записи Наташи 17.10 */
+var HAVE = PRAISE.concat(['ne_tochno','nothing','star3'], VOICE);
+var HAS_IMG = {};
+function loadImgList(list){ list.forEach(function(f){ HAS_IMG[f]=1; }); }
+function picture(src, cls){
+  if(HAS_IMG[src]) return '<img src="' + 'images/' + src + '" class="'+(cls||'')+'" alt="">';
+  return '';
+}
+function q(id){ return document.getElementById(id); }
+function shuffle(a){
+  a = a.slice();
+  for(var i = a.length-1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+var VOW = 'АЕЁИОУЫЭЮЯ';
+function paint(s){
+  return String(s).split('').map(function(ch){
+    if(VOW.indexOf(ch.toUpperCase()) > -1) return '<span class="vowel">'+ch+'</span>';
+    if(/[А-Яа-яЁё]/.test(ch)) return '<span class="cons">'+ch+'</span>';
+    return ch;
+  }).join('');
+}
+var current = null, lastPraise = '', unlocked = false, fading = null, startGen = 0, sayGen = 0, curAudio = null;
+/* звук не обрываем резко: мягкое затухание ~200 мс (как в занятии «Транспорт») */
+function fadeStop(a, ms, done){
+  if(!a || a.paused || a.ended){ if(done) done(); return; }
+  fading = a;
+  var v0 = 1; try{ v0 = a.volume || 1; }catch(e){}
+  var steps = 8, i = 0;
+  var iv = setInterval(function(){
+    i++;
+    try{ a.volume = Math.max(0, v0 * (1 - i / steps)); }catch(e){}
+    if(i >= steps){
+      clearInterval(iv);
+      try{ a.pause(); a.volume = 1; }catch(e){}
+      if(fading === a) fading = null;
+      if(done) done();
+    }
+  }, Math.max(25, Math.round(ms / steps)));
+}
+function hush(){
+  startGen++; sayGen++;                   /* всё «ожидающее» отменяется при смене экрана */
+  fadeStop(current, 200); current = null;
+  /* смена экрана — прошлый ролик замолкает сразу, поверх нового не звучит.
+     Тихое видео-логотип (muted) не трогаем. */
+  [].forEach.call(document.querySelectorAll('video'), function(v){
+    if(!v.muted){ try{ v.pause(); }catch(e){} }
+  });
+}
+function busySound(){
+  if(current && !current.paused && !current.ended) return current;
+  if(fading && !fading.paused && !fading.ended) return fading;
+  return null;
+}
+/* длительности звуков (сек) — для гарантированного продвижения раундов,
+   даже если браузер телефона не пришлёт ended/loadedmetadata */
+var V_DUR = { genialno:1.94, ne_tochno:1.86, nothing:0.15, p_aga:1.66, p_da:1.66,
+  p_konechno:1.85, p_konechno2:2.13, p_molodec:1.67, p_soglasna:2.13, p_ty_prav:2.30,
+  p_verno:2.39, star3:3.15, tochno2:1.66,
+  ku_q:4.08, gi_q:2.87, ya_q:2.59, gr_grib:4.17, gr_yag:4.27, gr_done:4.83 };
+function play(key, onend, waitBusy){
+  if(HAVE.indexOf(key) < 0){ if(onend) setTimeout(onend, 600); return; }
+  var gen = ++startGen;                  /* новейший звук побеждает: старые «ждуны» не стартуют */
+  var fired = false;
+  function fire(){
+    if(fired) return; fired = true;
+    if(gen === startGen && onend) onend();
+  }
+  var start = function(){
+    if(gen !== startGen) return;         /* нас перекрыли — не накладываемся */
+    try{
+      if(!curAudio){
+        curAudio = new Audio();          /* ОДИН элемент на все фразы: телефоны (iOS/WebView)
+                                            надёжно играют уже разблокированный элемент */
+        curAudio.preload = 'auto';
+      }
+      var a = curAudio;
+      a.onended = function(){ if(gen === startGen) fire(); };
+      a.src = 'sounds/' + key + '.mp3';
+      current = a;
+      var p = a.play();
+      if(p && p.catch) p.catch(function(){ if(gen === startGen) fire(); });
+    }catch(e){ if(gen === startGen) fire(); }
+    /* страховка: раунд продвинется по известной длительности файла,
+       даже если ended не придёт (мобильные браузеры) */
+    setTimeout(function(){ if(gen === startGen) fire(); }, ((V_DUR[key] || 2.5) + 0.6) * 1000);
+  };
+  var a = busySound();
+  if(!a){ start(); return; }
+  if(waitBusy){                          /* не обрываем текущую фразу — ждём её конца */
+    var wt = 0;
+    (function wait(){
+      if(gen !== startGen) return;
+      var b = busySound();
+      if(b && wt < 150){ wt++; setTimeout(wait, 100); return; }
+      if(gen !== startGen) return;
+      start();
+    })();
+    return;
+  }
+  if(a === current){ current = null; fadeStop(a, 200, start); return; }
+  var tries = 0;                         /* ждём мягкое затухание, но стартуем только «последним» */
+  (function waitFade(){
+    if(gen !== startGen) return;
+    var b = busySound();
+    if(b && tries < 80){ tries++; setTimeout(waitFade, 50); return; }
+    start();
+  })();
+}
+/* фраза стартует после задержки и ждёт, пока договорит текущий звук (не обрываем похвалу) */
+function sayQ(key, delay){
+  delay = (typeof delay === 'number') ? delay : 500;
+  var gen = ++sayGen;                    /* новая задача/раунд отменяет прошлую ожидающую фразу */
+  var tries = 0;
+  function att(){
+    if(gen !== sayGen) return;           /* фраза устарела (уже другая задача) — молчим */
+    var busy = busySound();
+    if(busy && tries < 7){ tries++; setTimeout(att, 350); return; }
+    if(gen !== sayGen) return;
+    if(busy && tries >= 7){              /* звук «завис» (мобильные): глушим и всё равно спрашиваем */
+      try{ busy.pause(); }catch(e){}
+      current = null; fading = null;
+    }
+    play(key);
+  }
+  setTimeout(att, delay);
+}
+function praise(onend, waitBusy){
+  var pool = PRAISE.filter(function(x){ return x !== lastPraise; });
+  var pick = pool[Math.floor(Math.random()*pool.length)];
+  lastPraise = pick; play(pick, onend, waitBusy);
+}
+function playVideo(id){
+  var v = q(id); if(!v) return;
+  try{ v.currentTime = 0; v.muted = false; v.play().catch(function(){ v.muted = true; v.play().catch(function(){}); }); }catch(e){}
+}
+function vidPlay(el){
+  var v = el;
+  try{ if(v.paused){ v.muted = false; v.play().catch(function(){ v.muted = true; v.play().catch(function(){}); }); }
+       else { v.pause(); } }catch(e){}
+}
+/* фоновая предзагрузка роликов: к приходу на экран видео уже готово (чек-лист) */
+function prefV(id){
+  var v = q(id); if(!v) return;
+  try{ if(!v.dataset.pf){ v.dataset.pf = '1'; v.preload = 'auto'; v.load(); } }catch(e){}
+}
+var PREF_VID = { s0:'vidpriv', s2:'viditog', s3:'viditog' };
+/* кнопка внизу: «Дальше ➡» появляется только после выполненного задания */
+function footNext(id, text){
+  var old = q('foot').querySelector('[data-act^="go("]');
+  if(old) old.remove();
+  var b = document.createElement('button');
+  b.className = 'btn main'; b.setAttribute('data-act','go("'+id+'")'); b.textContent = text || 'Дальше ➡';
+  q('foot').appendChild(b);
+}
+/* страховка: после 3 ошибок в задании появляется «Пропустить ➡» */
+function giveSkip(id){
+  if(q('skip_'+id)) return;
+  var b = document.createElement('button');
+  b.className = 'btn'; b.id = 'skip_'+id;
+  b.setAttribute('data-act','go("'+NEXT[id]+'")'); b.textContent = 'Пропустить ➡';
+  q('foot').appendChild(b);
+}
+/* весёлый герой после верного ответа и в конце задания */
+var REW = {
+  s2: { i:'balovashka_ura_2.jpg',  t:'Умница!'  },
+  s3: { i:'natasha_ura.jpg',       t:'Молодец!' }
+};
+function heroReward(id, hideTask){
+  var r = REW[id]; if(!r) return;
+  var host = document.querySelector('.screen.on'); if(!host) return;
+  var old = host.querySelector('.heroReward'); if(old) old.remove();
+  var pic = host.querySelector('.taskpic'); if(pic) pic.style.display = 'none';
+  if(hideTask !== false){
+    var gb = host.querySelector('#gridBox'); if(gb) gb.style.display = 'none';
+    var qq = host.querySelector('#kustQ'); if(qq) qq.style.display = 'none';
+  }
+  var d = document.createElement('div');
+  d.className = 'heroReward';
+  d.innerHTML = picture(r.i) + (r.t ? '<div class="hrtext">' + r.t + '</div>' : '');
+  host.appendChild(d);
+}
+function show(id){
+  hush();
+  [].slice.call(document.querySelectorAll('.screen')).forEach(function(s){ s.classList.remove('on'); });
+  [].slice.call(document.querySelectorAll('.heroReward')).forEach(function(x){ x.remove(); });
+  q(id).classList.add('on');
+  q('foot').innerHTML = '';
+  if(VIDEO_SHOW[id]) playVideo(VIDEO_SHOW[id]);
+  if(ONSHOW[id]) ONSHOW[id]();
+  if(PREF_VID[id]) setTimeout(function(){ prefV(PREF_VID[id]); }, 700);
+  var key = SCREEN_SAY[id];
+  if(key) play(key);
+}
+function go(id){ show(id); }
+function restart(){ show('s0'); }
+var ONSHOW = {};
+
+/* ── разблокировка звука на телефоне: первый тап ── */
+['pointerdown','touchstart','click'].forEach(function(ev){
+  document.addEventListener(ev, function(){
+    if(unlocked) return; unlocked = true;
+    try{
+      if(!curAudio){ curAudio = new Audio(); curAudio.preload = 'auto'; }
+      curAudio.src = 'sounds/nothing.mp3';   /* играем на ТОМ ЖЕ элементе — телефон его разблокирует навсегда */
+      curAudio.play().catch(function(){});
+    }catch(e){}
+  }, true);
+});
+
+loadImgList(['poster_logo.jpg','poster_privet.jpg','poster_itog.jpg',
+  'kust_shipovnik.jpg','kust_malina.jpg','kust_smorodina.jpg','kust_kryzhovnik.jpg',
+  'yag_malina.jpg','yag_smorodina.jpg','yag_kryzhovnik.jpg','yag_shipovnik.jpg','yag_klubnika.jpg',
+  'grib_lisichka.jpg','grib_maslenok.jpg','grib_podosinovik.jpg','grib_shampinion.jpg','grib1.jpg',
+  'natasha_ura.jpg','balovashka_ura_2.jpg','balovashka_dumaet.jpg','yasha_serdechki.jpg','natasha_serdechki.jpg']);
+
+/* ── ЭКРАН 2. ВИДЕО-НАЧАЛО: ролик играет при входе, «Дальше» всегда внизу ── */
+ONSHOW['s1'] = function(){ footNext(NEXT.s1, 'Дальше ➡'); };
+
+/* ── ЗАДАНИЕ 1. КУСТ – ЯГОДА ─────────────────────────────────────── */
+var kuIdx = 0, kuErr = 0, kuLock = false;
+ONSHOW['s2'] = function(){ kuIdx = 0; kuErr = 0; kuLock = false; drawKust(); };
+function drawKust(){
+  var cur = KUSTY[kuIdx];
+  var host = q('s2');
+  var old = host.querySelector('.heroReward'); if(old) old.remove();
+  q('kustPic').style.display = '';
+  q('kustName').style.display = '';
+  q('kustQ').style.display = '';
+  q('hint1').textContent = '';
+  q('fb1').innerHTML = '';
+  q('kustAns').innerHTML = '';
+  var by = q('bigHero1'); by.classList.remove('on'); by.innerHTML = '';
+  q('cntKust').textContent = 'Куст ' + (kuIdx+1) + ' из ' + KUSTY.length;
+  q('kustPic').innerHTML = picture(cur.i);
+  q('kustName').textContent = cur.n;         /* подпись куста — отдельно, мельче, зелёная */
+  q('kustQ').textContent = cur.q;
+  var row = q('kustOpts'); row.innerHTML = '';
+  shuffle(KUST_OPTS.map(function(o, k){ return k; })).forEach(function(k){
+    var o = KUST_OPTS[k];
+    var b = document.createElement('button');
+    b.className = 'optbtn';
+    b.innerHTML = picture(o.i);                 /* ягодки без подписей — подпись одна, у куста */
+    b.setAttribute('data-act','kustPick(el,' + k + ')');
+    row.appendChild(b);
+  });
+  kuLock = false;
+  sayQ('ku_q', 800);                      /* вопрос голосом — после того как ребёнок увидел куст */
+}
+function kustPick(el, k){
+  if(kuLock) return;
+  var cur = KUSTY[kuIdx];
+  if(KUST_OPTS[k].i === cur.a){
+    kuLock = true; kuErr = 0;
+    if(kuIdx < KUSTY.length - 1){
+      /* промежуточный куст: куст + ЕГО ягода, внизу — Яша с сердечками и «Молодец!» */
+      q('kustQ').style.display = 'none';
+      q('kustOpts').innerHTML = '';
+      q('kustAns').innerHTML = picture(cur.a);
+      q('hint1').innerHTML = '';
+      q('fb1').innerHTML = picture('yasha_serdechki.jpg') + '<div class="fbtext">Молодец!</div>';
+      play('p_molodec', function(){            /* «Молодец!» — голос Наташи */
+        setTimeout(function(){ kuIdx++; drawKust(); }, 800);
+      }, true);                                /* вопрос раунда НЕ обрывается — ждём его конца */
+    } else {
+      /* КОНЕЦ ЗАДАНИЯ: Яша с сердечками — КРУПНО, на весь экран */
+      q('kustPic').style.display = 'none';
+      q('kustName').style.display = 'none';
+      q('kustQ').style.display = 'none';
+      q('kustOpts').innerHTML = '';
+      q('kustAns').innerHTML = '';
+      q('fb1').innerHTML = '';
+      q('hint1').innerHTML = '';
+      var by = q('bigHero1');
+      by.innerHTML = picture('yasha_serdechki.jpg') + '<div class="bt">Молодец!<br>Ты справился с первым заданием!</div>';
+      by.classList.add('on');
+      play('p_molodec', function(){
+        setTimeout(function(){ footNext(NEXT.s2, 'Дальше ➡'); }, 800);
+      }, true);
+    }
+  } else {
+    el.classList.add('shake');
+    setTimeout(function(){ el.classList.remove('shake'); }, 500);
+    play('ne_tochno');
+    q('hint1').innerHTML = '<img class="think" src="images/balovashka_dumaet.jpg">Подумай ещё!';
+    if(++kuErr >= 3) giveSkip('s2');
+  }
+}
+
+/* ── ЗАДАНИЕ 2. ПОЛЕ 3×3: ГРИБЫ → ЯГОДЫ ─────────────────────────── */
+var grCells = [], grCnt = 0, grErr = 0, grPhase = 0, grLock = false, grFbT = null;
+function gridHappy(){
+  clearTimeout(grFbT);
+  var f = q('fb3');
+  f.setAttribute('data-happy','1');
+  f.innerHTML = '<img class="think" src="images/balovashka_ura_2.jpg">';
+  grFbT = setTimeout(function(){
+    var el = q('fb3');
+    if(el && el.getAttribute('data-happy')){ el.innerHTML = ''; el.removeAttribute('data-happy'); }
+  }, 1000);
+}
+function viewFit(){
+  try{
+    var vv = window.visualViewport;
+    var wi = window.innerWidth || 800;
+    var W = Math.min((vv && vv.width) || 1e9, wi, (window.screen && screen.width) || 1e9);
+    if(W < wi - 8){
+      document.documentElement.style.maxWidth = Math.round(W) + 'px';
+      document.documentElement.style.margin = '0 auto';
+    }
+  }catch(e){}
+}
+ONSHOW['s3'] = function(){ grPhase = 0; grErr = 0; drawGrid(); };
+function drawGrid(){
+  var ph = G_PHASES[grPhase];
+  var total = G_N * G_N;
+  var imgs = [];
+  for(var i = 0; i < ph.need; i++) imgs.push(ph.targets[i % ph.targets.length]);
+  var pool = shuffle(ph.pool);
+  var k = 0;
+  while(imgs.length < total){
+    imgs.push(pool[k % pool.length]);
+    k++;
+    if(k % pool.length === 0) pool = shuffle(pool);
+  }
+  imgs = shuffle(imgs);
+  /* убрать одинаковые картинки, стоящие рядом (в строке или столбце) */
+  for(var pass = 0; pass < 250; pass++){
+    var bad = -1, bj = -1, n = G_N;
+    for(var j = 0; j < total; j++){
+      if(j % n !== n - 1 && imgs[j] === imgs[j+1]){ bad = j; bj = j + 1; break; }
+      if(j + n < total && imgs[j] === imgs[j+n]){ bad = j; bj = j + n; break; }
+    }
+    if(bad < 0) break;
+    for(var t = 0; t < 80; t++){
+      var r = Math.floor(Math.random() * total);
+      if(r !== bj && imgs[r] !== imgs[bj]){ var tmp = imgs[bj]; imgs[bj] = imgs[r]; imgs[r] = tmp; break; }
+    }
+  }
+  grCells = imgs; grCnt = 0; grErr = 0; grLock = false;
+  var box = q('gridBox');
+  box.style.setProperty('--n', G_N);
+  box.style.display = '';
+  q('gridSub').style.display = '';
+  var b2 = q('bigHero2'); b2.classList.remove('on'); b2.innerHTML = '';
+  viewFit();
+  box.innerHTML = '';
+  imgs.forEach(function(f, kk){
+    var d = document.createElement('div');
+    d.className = 'cell';
+    d.innerHTML = '<img src="images/' + f + '" alt="">';
+    d.setAttribute('data-act','gridPick(el,' + kk + ')');
+    box.appendChild(d);
+  });
+  q('gridSub').textContent = ph.sub;
+  q('cntFind').textContent = 'Найдено: 0 из ' + ph.need;
+  clearTimeout(grFbT);
+  q('fb3').removeAttribute('data-happy');
+  q('fb3').innerHTML = '';
+  sayQ(ph.say, 800);                        /* задание этапа голосом — после того как поле на экране */
+  var host = q('s3');
+  var old = host.querySelector('.heroReward'); if(old) old.remove();
+}
+if(window.visualViewport){ try{ window.visualViewport.addEventListener('resize', viewFit); }catch(e){} }
+window.addEventListener('resize', viewFit);
+viewFit();
+function gridPick(el, k){
+  if(grLock) return;
+  var ph = G_PHASES[grPhase];
+  if(el.classList.contains('done')){
+    el.classList.add('shake');                 /* уже нашли — мягко покачаем */
+    setTimeout(function(){ el.classList.remove('shake'); }, 500);
+    return;
+  }
+  if(ph.targets.indexOf(grCells[k]) > -1){
+    el.classList.add('done'); grCnt++; grErr = 0;
+    q('cntFind').textContent = 'Найдено: ' + grCnt + ' из ' + ph.need;
+    if(grCnt >= ph.need){
+      grLock = true;
+      clearTimeout(grFbT);
+      q('fb3').removeAttribute('data-happy');
+      q('fb3').textContent = ph.all;
+      if(grPhase < G_PHASES.length - 1){
+        praise(function(){                     /* похвала договорила → пауза → только потом новый этап */
+          setTimeout(function(){ grPhase++; drawGrid(); }, 900);
+        });
+      } else {
+        /* КОНЕЦ ЗАДАНИЯ 2: Наташа с сердечками — КРУПНО, на весь экран */
+        q('gridBox').style.display = 'none';
+        q('gridSub').style.display = 'none';
+        q('fb3').innerHTML = '';
+        var b2 = q('bigHero2');
+        b2.innerHTML = picture('natasha_serdechki.jpg') + '<div class="bt">Молодец!<br>Ты справился со вторым заданием!</div>';
+        b2.classList.add('on');
+        play('gr_done', function(){           /* «Все грибы найдены и все ягодки!» — голос Наташи */
+          setTimeout(function(){ footNext(NEXT.s3, 'Дальше ➡'); }, 800);
+        });
+      }
+    } else {
+      gridHappy();                              /* Баловашка радуется — после каждого верного */
+    }
+  } else {
+    clearTimeout(grFbT);
+    q('fb3').removeAttribute('data-happy');
+    el.classList.add('shake');
+    setTimeout(function(){ el.classList.remove('shake'); }, 500);
+    play(ph.errSay);                         /* «Это гриб» / «Это ягода» — голос Наташи */
+    q('fb3').innerHTML = '<img class="think" src="images/balovashka_dumaet.jpg">' + 'Это не ' + ph.err + '. Ищи внимательнее!';
+    if(++grErr >= 3) giveSkip('s3');
+  }
+}
+
+/* ── клики: всё на касание (pointerdown), как требует чек-лист ── */
+document.addEventListener('pointerdown', function(e){
+  var el = e.target.closest ? e.target.closest('[data-act]') : null;
+  if(!el) return;
+  e.preventDefault();
+  var code = el.getAttribute('data-act');
+  try{ (new Function('var el=arguments[0];' + code))(el); }catch(err){}
+}, false);
+
+show('s0');
+</script>
+</body>
+</html>
